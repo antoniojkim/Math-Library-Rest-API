@@ -1,102 +1,307 @@
-# Encryption-Rest-API
-Public Rest API for my [Encryption Library](https://github.com/antoniok9130/Encryption-Library)
+# Math Libary Rest API
+Public Rest API for my [Math Evaluation Library](https://github.com/antoniok9130/Math-Evaluation-Library)
 
-All encrypting, decrypting, and hashing is done using the ByteEncryption algorithm found in my [Encryption Library](https://github.com/antoniok9130/Encryption-Library)
+All math is being evaluated using the [Math Evaluation Library](https://github.com/antoniok9130/Math-Evaluation-Library)
 
 ## Documentation
-### Generate Private Key
-
+### Input to Expression
+#### Request Mapping
 ```
-https://encryption-rest-api-jhk.appspot.com/generate/key
-https://encryption-rest-api-jhk.appspot.com/generate/key?length=<integer>
+http://math-rest-api-jhk.appspot.com/expression
 ```
+#### GET Request Parameter
 
-Params: length (Integer)
-
-Request Method:   [GET](https://encryption-rest-api-jhk.appspot.com/generate/key)
-
-This generates a hex private key of twice the specified length (default 64) that can be used in other API requests.
- 
-Returns: **JSON**
-
-E.g.
-
-`{"key":"E23D8925935EAA5A02D90ED22B4890297A6FE11552D0D498E707182E749BB05DFB886E8EA9B782955A9C0CBC4439A23402764CD8D46B0C9538711EAFB1C25EAE","message":"Generated Private Key"}`
-
-### Generate KeyStore
-
+<details>
+  <summary>Request URL</summary>
+    
 ```
-https://encryption-rest-api-jhk.appspot.com/generate/keystore
-https://encryption-rest-api-jhk.appspot.com/generate/keystore?scrambler=<string>
+http://math-rest-api-jhk.appspot.com/expression?input=<Math Input>
 ```
+</details>
 
-Params: scrambler (String)
-
-Request Method:   [GET](https://encryption-rest-api-jhk.appspot.com/generate/keystore)
-
-This generates a keystore that can be used in the ByteEncryption algorithm.
- 
-Returns: **JSON**
-
-
-### Encrypt a string
-
+#### POST Request Body (Ajax)
+<details>
+  <summary>JQuery Ajax Request Code</summary>
+    
 ```
-https://encryption-rest-api-jhk.appspot.com/encrypt?string=<text>
-https://encryption-rest-api-jhk.appspot.com/encrypt?string=<text>&key=<private-key>
+$.ajax({
+    url:"http://math-rest-api-jhk.appspot.com/expression",
+    type:"POST",
+    
+    contentType: "application/json; charset=utf-8"
+    async: false, 
+    cache: false,
+    processData:false,
+    
+    data: JSON.stringify({"input":<Math Input>}),
+    
+    success: function(data){ ... },
+    error: function(request, status, error){ ... }
+});
 ```
+</details>
 
-Params: **string** (String), **key** (String)
+#### Sample Output
 
-Request Method:   [GET](https://encryption-rest-api-jhk.appspot.com/encrypt?string=<text>&key=<private-key>)
-
-This encrypts the *string* parameter using the *key* parameter. If a key is not provided, the default key will be used.
-
-Returns: **JSON**
-
-E.g. 
-
-`{"text":"example","encrypted":"F05285358D32726358A1072AC667B789976384D3EEA91F77A94EF4652CFC74AB"}`
-
-
-
-### Decrypt a string
-
+<details>
+  <summary>JSON Response</summary>
+    
 ```
-https://encryption-rest-api-jhk.appspot.com/decrypt?string=<text>
-https://encryption-rest-api-jhk.appspot.com/decrypt?string=<text>&key=<private-key>
+{
+    "input":"sin(π/6)",
+    "output":{
+        "valid":true,
+        "numbers":[
+            3.141592653589793,
+            6.0
+        ],
+        "integer":false,
+        "numberExpression":false,
+        "postfix":"π 6 / sin",
+        "tex":"\\sin\\left(\\dfrac{\\pi}{6}\\right)",
+        "infix":"sin(π/6)",
+        "rational":false,
+        "value":0.5
+    }
+}
 ```
+</details>
 
-Params: **string** (String), **key** (String)
-
-Request Method:   [GET](https://encryption-rest-api-jhk.appspot.com/decrypt?string=<text>&key=<private-key>)
-
-This decrypts the *string* parameter using the *key* parameter. If a key is not provided, the default key will be used.
-
-Returns: **JSON**
-
-E.g.
-
-`{"text":"F05285358D32726358A1072AC667B789976384D3EEA91F77A94EF4652CFC74AB","decrypted":"example"}`
-
-### Hash a string
-
+### Evaluate Expression
+#### Request Mapping
 ```
-https://encryption-rest-api-jhk.appspot.com/hash?string=<text>
-https://encryption-rest-api-jhk.appspot.com/hash?string=<text>&key=<private-key>
+http://math-rest-api-jhk.appspot.com/expression/evaluate
 ```
+#### GET Request Parameter
 
-Params: **string** (String), **key** (String)
+<details>
+  <summary>Request URL</summary>
+    
+```
+http://math-rest-api-jhk.appspot.com/expression/evaluate?input=<Math Input>
+```
+</details>
 
-Returns: **JSON**
+#### POST Request Body (Ajax)
+<details>
+  <summary>JQuery Ajax Request Code</summary>
+    
+```
+$.ajax({
+    url:"http://math-rest-api-jhk.appspot.com/expression/evaluate",
+    type:"POST",
+    
+    contentType: "application/json; charset=utf-8"
+    async: false, 
+    cache: false,
+    processData:false,
+    
+    data: JSON.stringify({"input":<Math Input>}),
+    
+    success: function(data){ ... },
+    error: function(request, status, error){ ... }
+});
+```
+</details>
 
-Request Method:   [GET](https://encryption-rest-api-jhk.appspot.com/hash?string=<text>&key=<private-key>)
+#### Sample Output
 
-This hashes the *string* parameter using the *key* parameter. If a key is not provided, the default key will be used.
+<details>
+  <summary>JSON Response</summary>
+    
+```
+{
+    "input":"sin(π/6)",
+    "output":{
+        "valid":true,
+        "numbers":[0.5],
+        "integer":false,
+        "numberExpression":true,
+        "postfix":"0.5",
+        "tex":"0.5",
+        "infix":"0.5",
+        "rational":false,
+        "value":0.5
+    }
+}
+```
+</details>
 
-Returns: **JSON**
 
-E.g.
+### Simplify Expression
+#### Request Mapping
+```
+http://math-rest-api-jhk.appspot.com/expression/simplify
+```
+#### GET Request Parameter
 
-`{"text":"example","hash":"BC1F3DC1F9D98985F5B47C1C97DB8F697CF8303F8E2D840AD0DDF25B46F343AAD0DDF25B46F343AAD0DDF25B46F343AAD0DDF25B46F343AAD0DDF25B46F343AA"}`
- 
+<details>
+  <summary>Request URL</summary>
+    
+```
+http://math-rest-api-jhk.appspot.com/expression/simplify?input=<Math Input>
+```
+</details>
+
+#### POST Request Body (Ajax)
+<details>
+  <summary>JQuery Ajax Request Code</summary>
+    
+```
+$.ajax({
+    url:"http://math-rest-api-jhk.appspot.com/expression/simplify",
+    type:"POST",
+    
+    contentType: "application/json; charset=utf-8"
+    async: false, 
+    cache: false,
+    processData:false,
+    
+    data: JSON.stringify({"input":<Math Input>}),
+    
+    success: function(data){ ... },
+    error: function(request, status, error){ ... }
+});
+```
+</details>
+
+#### Sample Output
+
+<details>
+  <summary>JSON Response</summary>
+    
+```
+{
+    "input":"sinx/cosx",
+    "output":{
+        "valid":true,
+        "numbers":[],
+        "integer":false,
+        "numberExpression":false,
+        "postfix":"x tan",
+        "tex":"\\tan\\left(x\\right)",
+        "infix":"tan(x)",
+        "rational":false,
+        "value":"NaN"
+    }
+}
+```
+</details>
+
+
+
+### Fraction Expression
+#### Request Mapping
+```
+http://math-rest-api-jhk.appspot.com/expression/fraction
+```
+#### GET Request Parameter
+
+<details>
+  <summary>Request URL</summary>
+    
+```
+http://math-rest-api-jhk.appspot.com/expression/fraction?input=<Math Input>
+```
+</details>
+
+#### POST Request Body (Ajax)
+<details>
+  <summary>JQuery Ajax Request Code</summary>
+    
+```
+$.ajax({
+    url:"http://math-rest-api-jhk.appspot.com/expression/fraction",
+    type:"POST",
+    
+    contentType: "application/json; charset=utf-8"
+    async: false, 
+    cache: false,
+    processData:false,
+    
+    data: JSON.stringify({"input":<Math Input>}),
+    
+    success: function(data){ ... },
+    error: function(request, status, error){ ... }
+});
+```
+</details>
+
+#### Sample Output
+
+<details>
+  <summary>JSON Response</summary>
+    
+```
+{
+    "input":"sin(π/6)",
+    "output":{
+        "valid":true,
+        "rational":true,
+        "numbers":[
+            1.0,
+            2.0
+        ],
+        "integer":false,
+        "numberExpression":false,
+        "postfix":"1 2 /",
+        "tex":"\\dfrac{1}{2}",
+        "infix":"1/2",
+        "value":0.5
+    }
+}
+```
+</details>
+
+
+### Value of Expression
+#### Request Mapping
+```
+http://math-rest-api-jhk.appspot.com/expression/valueOf
+```
+#### GET Request Parameter
+
+<details>
+  <summary>Request URL</summary>
+    
+```
+http://math-rest-api-jhk.appspot.com/expression/valueOf?input=<Math Input>
+```
+</details>
+
+#### POST Request Body (Ajax)
+<details>
+  <summary>JQuery Ajax Request Code</summary>
+    
+```
+$.ajax({
+    url:"http://math-rest-api-jhk.appspot.com/expression/valueOf",
+    type:"POST",
+    
+    contentType: "application/json; charset=utf-8"
+    async: false, 
+    cache: false,
+    processData:false,
+    
+    data: JSON.stringify({"input":<Math Input>}),
+    
+    success: function(data){ ... },
+    error: function(request, status, error){ ... }
+});
+```
+</details>
+
+#### Sample Output
+
+<details>
+  <summary>JSON Response</summary>
+    
+```
+{
+    "input":"sin(π/6)",
+    "output":{
+        "value":0.5
+    }
+}
+```
+</details>
